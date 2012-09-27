@@ -1,1 +1,13 @@
-This is just a sample project to get the students in a guest lecture at Cooper Union going with GitHub and Heroku.
+Project Proposal
+===========================================================
+
+```
+The goal of my proposed site is to compile a collection of tweets that include one or more of the top-ten misspelled words commonly found on Twitter.
+This word bank includes: vicariously, genius, hypocrites, angels, manners, cologne, college and others. At the moment, the navigation of the site will
+enable the user to choose words from this bank in order to see relevant tweets that misspell the words, so as to understand the context and person behind
+the spelling. Trends of who, why, and where will ideally emerge. 
+
+```
+
+Reference for Markdown
+------------------------
