@@ -5,30 +5,53 @@
 		<script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
 		
 		<script>
-			$(function(){
-				console.log('one');
-			
-			});
-			
-			
-			$.ajax({
-				url:'http://api.twitter.com/1/statuses/user_timeline.json?include_entities=true&include_rts=true&screen_name=BarackObama',
-				dataType:'jsonp',
-				success:function(response){
 
-					$.each(response, function(index, value){
-					console.log(value);
-						$('#tweets').append('<li>' + value.text + '</li>');
+			if(localStorage.twitterSearch) {
+				
+				var twitterData = JSON.parse(localStorage.twitterSearch);
+				var formattedData = [];
+				
+				$.each(twitterData.results, function(index, tweet){					
+					
+					var text = tweet.text;
+					
+					if(tweet.entities){
+						if(tweet.entities.urls){
+							$.each(tweet.entities.urls, function(i, url){
+								text = text.replace(url.url, '<a href="' + url.expanded_url + '">' + url.display_url + '</a>');
+								});
+						}
+					}
+							
+						formattedData.push({
+						text: tweet.text,
+						from_user_name: tweet.from_user_name
 						});
-				},
+					});
 				
-				error: function(){
-					console.log('damn. i\'m sad');
-				}
 				
+				localStorage.formattedData = JSON.stringify(formattedData);
+				console.log('hooray!');
+				console.log('hooray!');
+				console.log('hooray!');
+				
+				
+				
+			} else {
 			
-			});
-			
+				$.ajax({
+					url:'http://search.twitter.com/search.json?q=bicuriously&rpp=5&include_entities=true&result_type=mixed,recent,popular',
+					dataType:'jsonp',
+					success:function(response){
+						localStorage.twitterSearch = JSON.stringify(response);
+						console.log('i think that worked');
+					},
+				
+					error: function(error){
+						alert(error);
+					}
+				});
+			}
 		</script>	
 		<meta charset="utf-8">
 		<title>Searching Tweets</title>
