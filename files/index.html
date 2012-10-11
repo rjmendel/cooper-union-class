@@ -1,69 +1,221 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-	
-		<script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
-		
-		<script>
+//list of terms and terms we don't want. query to search that implements those rules. push visual, prep for next week
 
-			if(localStorage.twitterSearch) {
-				
-				var twitterData = JSON.parse(localStorage.twitterSearch);
-				var formattedData = [];
-				
-				$.each(twitterData.results, function(index, tweet){					
-					
-					var text = tweet.text;
-					
-					if(tweet.entities){
-						if(tweet.entities.urls){
-							$.each(tweet.entities.urls, function(i, url){
-								text = text.replace(url.url, '<a href="' + url.expanded_url + '">' + url.display_url + '</a>');
-								});
-						}
-					}
-							
-						formattedData.push({
-						text: tweet.text,
-						from_user_name: tweet.from_user_name
-						});
-					});
-				
-				
-				localStorage.formattedData = JSON.stringify(formattedData);
-				console.log('hooray!');
-				console.log('hooray!');
-				console.log('hooray!');
-				
-				
-				
-			} else {
-			
-				$.ajax({
-					url:'http://search.twitter.com/search.json?q=bicuriously&rpp=5&include_entities=true&result_type=mixed,recent,popular',
-					dataType:'jsonp',
-					success:function(response){
-						localStorage.twitterSearch = JSON.stringify(response);
-						console.log('i think that worked');
-					},
-				
-					error: function(error){
-						alert(error);
-					}
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>#MISSSPELLLED</title>	
+		<meta http-equiv="Content-Type" content="text/html/css; charset=iso-8859-1">
+		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<style>
+			* {
+  outline: none;
+}
+body {
+  background-image:url('miss.jpg');
+  background-size:100%;
+  background-repeat:no-repeat;
+  background-color:
+  font: 19px;
+  letter-spacing: 2px;
+  margin: 8px;
+  margin-left: 0px;
+  overflow: visible;
+}
+
+html {
+  overflow: hidden;
+}
+
+#topics {
+  position: absolute;
+  left: 800px;
+  top: 120px;
+  width: 550px;
+}
+h1 {
+top:195px;
+left:800px;
+color:#66FFFF;
+font-size:36px;
+letter-spacing:3px;
+margin:0px 0px 0px 14px;
+position:relative;
+text-decoration:none;
+width:200px;
+}
+
+h2 {
+  top:150px;
+  position: relative;
+  z-index: 1;
+  font-size: 40px;
+  line-height: 55px;
+  overflow: visible;
+  margin: 0;
+  padding-left: 14px;
+  cursor: pointer;
+  width: 400px;
+}
+h2.selected {
+  color: #66FFFF;
+}
+h2 span {
+  padding-left: 2px;
+  padding-right: 6px;
+  font-size:25px;
+}
+
+#items {
+  position: absolute;
+  top: 780px;
+  left: 0px;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: 90%;
+  margin-bottom:20px;
+}
+#items li {
+  color: #000000;
+  font-size: 24px;
+  line-height: 26px;
+  letter-spacing: 0px;
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+  padding-left: 200px;
+  padding-right: 20px;
+  overflow: hidden;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  white-space: -o-pre-wrap;
+  white-space: -moz-pre-wrap;
+}
+#items li div.tweet-wrapper {
+  padding-top: 100px;
+  padding-bottom: 20px;
+}
+#items li span.large {
+  font-size: 36px;
+  line-height: 32px;
+  letter-spacing: -2px;
+}
+#items li em {
+  font-style: normal;
+  font-size: 56px;
+  line-height: 56px;
+  letter-spacing: -3px;
+  font-weight: bold;
+}
+
+.umbeyonce { color: #FFFFFF  }
+.umbeyonce.selected span { background-color:#66FFFF }
+#items li.umbeyonce em { color: #FF3333}
+
+.angles { color: #FFFFFF  }
+.angles.selected span { background-color:#66FFFF }
+#items li.angles em { color: #FF3333 }
+
+.collage { color: #FFFFFF  }
+.collage.selected span { background-color:#66FFFF }
+#items li.collage em { color: #FF3333 }
+
+.genious { color: #FFFFFF  }
+.genious.selected span { background-color:#66FFFF }
+#items li.genious em { color: #FF3333 }
+
+.bicuriously { color: #FFFFFF  }
+.bicuriously.selected span { background-color:#66FFFF }
+#items li.bicuriously em { color: #FF3333 }
+
+.hippocrites { color: #FFFFFF  }
+.hippocrites.selected span { background-color:#66FFFF }
+#items li.hippocrites em { color: #FF3333 }
+
+#extblock {
+position:relative;
+}
+</style>	
+</head>
+
+<body>
+
+<h1 id="logo" style="visibility:visible"><a href="https://twitter.com/miss_spellled">#missspellled</a></h1>  
+  
+  <div id="topics"> 
+    <h2 class="umbeyonce" title="umbeyonce"><span>umbeyonce</span></h2> 
+    <h2 class="angles" title="angles"><span>angles</span></h2> 
+    <h2 class="collage" title="collage"><span>collage</span></h2> 
+    <h2 class="genious" title="genious"><span>genious</span></h2> 
+    <h2 class="bicuriously" title="bicuriously"><span>bicuriously</span></h2> 
+    <h2 class="hippocrites" title="hippocrites"><span>hippocrites</span></h2>
+
+  </div> 
+	<script type="text/javascript">
+	var query="collage";
+	var getjson;
+	var getjson1;
+	//var getjson1;
+	var class1="umbeyonce";
+	var string1="umbeyonce";
+	//function loadit(){$("#items").append('<li class="umbeyonce" style="height:auto"><div class="tweet-wrapper">"#missspellled"<br><em>umbeyonce </em><span class="large"></span></div></li><br />');}
+	$(document).ready(function() {
+  		//var sendjson;
+		setTimeout("animateleftbar()",1000);
+		setTimeout("loadit(query)",2000);
+
+
+	$('.angles').click(function(){query="angles";
+	class1="angles"
+	string1="angles";
+	loadit(query);
+	});
+	$('.collage').click(function(){query="collage";
+	class1="collage";string1="collage";
+	loadit(query);});
+	$('.genious').click(function(){query="genious";
+	class1="genious";string1="genious";
+	loadit(query);});
+	$('.bicuriously').click(function(){query="bicuriously";
+	class1="bicuriously";string1="bicuriously";loadit(query);});
+	$('.hippocrites').click(function(){query="hippocrites";
+	class1="hippocrites";string1="hippocrites";loadit(query);});
+
+
+
+		});
+	function loadit(pquery){
+	var url='http://search.twitter.com/search.json?callback=?&q=';
+		$.getJSON(url+pquery,function(json){getjson=json;showtweet(getjson);});
+
+	}
+
+	function aFunction(msg){alert(msg);}
+	//$.addtweet2();
+
+	function animateleftbar(){
+		$("h2").animate({fontSize:"43px"},{queue:false,duration:1000}).animate({lineHeight:"40px"},1000);
+		setTimeout("makevisible()",1000);
+	}
+
+
+	$('.umbeyonce').click(function(){query="umbeyonce";class1="umbeyonce";
+	string1="umbeyonce";
+//	addtweet(query);
+	loadit(query);
+//	alert(query);
+	});
+	function showtweet(getjson){
+		$.each(getjson.results,function(i,tweet){
+		  		$("#items").animate({"top": "-=150px"}, 1500,function(){$("#items").append('<li class="'+class1+'" style="height:auto"><div class="tweet-wrapper">"#missspellled"<br><em>'+string1+' </em><span class="large"></span></div></li><br />');});
 				});
-			}
-		</script>	
-		<meta charset="utf-8">
-		<title>Searching Tweets</title>
-		<link rel="stylesheet" href="css/reset.css">
-		<link rel="stylesheet" href="css/style.css">
-  	</head>
-	<body>
-			<h1>missspellled</h1>
-			<ul id="tweets">
-				<li>
-						<img src="http://www.valerieatlarge.com/wp-content/uploads/2011/05/typo-w.jpg"/>
-				</li>
-			</ul>
-	</body>
+
+	}
+	</script>>
+  <div id="items"></ul> 
+
+
+</body>
+
+</body>
 </html>
